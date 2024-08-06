@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 
 interface ReminderProps {
     text: string;
@@ -10,6 +10,25 @@ interface ReminderProps {
 
 const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleCheck }) => {
     const timeString = new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (isChecked) {
+            Animated.sequence([
+                Animated.timing(fadeAnim, {
+                    toValue: 1,
+                    duration: 300,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(fadeAnim, {
+                    toValue: 0,
+                    duration: 1000,
+                    delay: 500,
+                    useNativeDriver: true,
+                }),
+            ]).start();
+        }
+    }, [isChecked]);
 
     return (
         <View style={styles.item}>
@@ -20,7 +39,11 @@ const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleChec
                 <Text style={styles.itemText}>{text}</Text>
                 <Text style={styles.itemTime}>{timeString}</Text>
             </View>
-            {isChecked && <Text style={styles.emoji}>🎉</Text>}
+            {isChecked && (
+                <Animated.Text style={[styles.emoji, { opacity: fadeAnim }]}>
+                    🎉
+                </Animated.Text>
+            )}
         </View>
     );
 };
