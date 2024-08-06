@@ -14,7 +14,7 @@ const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleChec
     return (
         <View style={styles.item}>
             <TouchableOpacity onPress={onToggleCheck} style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
-                {isChecked ? '✅' : '⬜'}
+                <Text>{isChecked ? '✅' : '⬜'}</Text>
             </TouchableOpacity>
             <View style={styles.textWrapper}>
                 <Text style={styles.itemText}>{text}</Text>
