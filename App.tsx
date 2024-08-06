@@ -134,6 +134,12 @@ export default function App() {
             >
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>
+                        RemindMi24 is a reminder app exclusively for setting reminders within the next 24 hours.
+                    </Text>
+                    <Text style={styles.modalText}>
+                        Simplistic and stylish. No nonsense, no interruptions.
+                    </Text>
+                    <Text style={[styles.modalText, styles.boldText]}>
                         Developed with <Text style={{ color: 'green' }}>❤️</Text> by Timothy (TJ) Klint
                     </Text>
                     <Text style={styles.bulletPoint}>• Connect with him on <Text style={styles.link} onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>LinkedIn</Text></Text>
@@ -253,6 +259,9 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
+    },
+    boldText: {
+        fontWeight: 'bold',
     },
     bulletPoint: {
         marginBottom: 10,
