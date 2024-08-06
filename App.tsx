@@ -69,10 +69,12 @@ export default function App() {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.infoIcon} onPress={() => setModalVisible(true)}>
-                <Icon name="info-circle" size={30} color="#FFF" />
-            </TouchableOpacity>
-            <Text style={styles.sectionTitle}>Today's Reminders ⏰</Text>
+            <View style={styles.header}>
+                <Text style={styles.sectionTitle}>RemindMi24 ⏰</Text>
+                <TouchableOpacity style={styles.infoIcon} onPress={() => setModalVisible(true)}>
+                    <Icon name="info-circle" size={30} color="#FFF" />
+                </TouchableOpacity>
+            </View>
         
             <View style={styles.remindersWrapper}>
                 <ScrollView style={styles.items}>
@@ -134,12 +136,12 @@ export default function App() {
                     <Text style={styles.modalText}>
                         Developed with <Text style={{ color: 'green' }}>❤️</Text> by Timothy (TJ) Klint
                     </Text>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>
-                        <Text style={styles.link}>LinkedIn</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://github.com/tjklint/RemindMii')}>
-                        <Text style={styles.link}>GitHub</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.modalText}>
+                        Connect with him on <Text style={styles.link} onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>LinkedIn</Text>
+                    </Text>
+                    <Text style={styles.modalText}>
+                        Star his repo, and view the source code: <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/tjklint/RemindMii')}>here</Text>
+                    </Text>
                     <TouchableOpacity
                         style={[styles.button, styles.buttonClose]}
                         onPress={() => setModalVisible(!modalVisible)}
@@ -160,18 +162,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#a3b18a',
         paddingTop: 50,
     },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+    },
     infoIcon: {
-        position: 'absolute',
-        top: 40,
-        right: 20,
-        zIndex: 1,
+        marginLeft: 10,
     },
     remindersWrapper: {
         height: '80%',
     },
     sectionTitle: {
-        marginTop: 70,
-        paddingHorizontal: 20,
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white',
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 20, // Added padding to prevent touching the edges
+        paddingHorizontal: 20,
     },
     input: {
         flex: 1,
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 10, // Added margin to create space between elements
+        marginLeft: 10,
     },
     addButton: {
         width: 60,
@@ -219,7 +222,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#588157',
         borderWidth: 2,
-        marginLeft: 10, // Added margin to create space between elements
+        marginLeft: 10,
     },
     modalView: {
         margin: 20,
@@ -240,6 +243,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
+        marginTop: 20,
     },
     buttonClose: {
         backgroundColor: '#2196F3',
@@ -255,6 +259,5 @@ const styles = StyleSheet.create({
     },
     link: {
         color: '#2196F3',
-        marginBottom: 10,
     },
 });
