@@ -13,14 +13,14 @@ const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleChec
 
     return (
         <View style={styles.item}>
-            <View>
+            <TouchableOpacity onPress={onToggleCheck} style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
+                {isChecked ? '✅' : '⬜'}
+            </TouchableOpacity>
+            <View style={styles.textWrapper}>
                 <Text style={styles.itemText}>{text}</Text>
                 <Text style={styles.itemTime}>{timeString}</Text>
             </View>
-            <TouchableOpacity onPress={onToggleCheck} style={styles.checkbox}>
-                <Text>{isChecked ? '✅' : '⬜'}</Text>
-            </TouchableOpacity>
-            <Text style={styles.partyEmoji}>🎉</Text>
+            {isChecked && <Text style={styles.emoji}>🎉</Text>}
         </View>
     );
 };
@@ -35,17 +35,29 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
+    textWrapper: {
+        flex: 1,
+        marginHorizontal: 10,
+    },
     itemText: {
-        maxWidth: '80%',
         color: '#588157',
     },
     itemTime: {
         color: '#588157',
     },
     checkbox: {
-        marginRight: 10,
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: '#588157',
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    partyEmoji: {
+    checkboxChecked: {
+        backgroundColor: '#a3b18a',
+    },
+    emoji: {
         fontSize: 24,
     },
 });
