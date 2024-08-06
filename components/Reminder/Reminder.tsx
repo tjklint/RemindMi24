@@ -6,26 +6,33 @@ interface ReminderProps {
     time: string;
     isChecked: boolean;
     onToggleCheck: () => void;
+    onRemove: () => void;
 }
 
-const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleCheck }) => {
+const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleCheck, onRemove }) => {
     const timeString = new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const fadeAnim = useRef(new Animated.Value(1)).current;
+    const scaleAnim = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
         if (isChecked) {
-            Animated.timing(fadeAnim, {
-                toValue: 0,
-                duration: 1000,
-                useNativeDriver: true,
-            }).start();
-        } else {
-            fadeAnim.setValue(1);
+            Animated.parallel([
+                Animated.timing(fadeAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(scaleAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+            ]).start(() => onRemove());
         }
     }, [isChecked]);
 
     return (
-        <Animated.View style={[styles.item, { opacity: fadeAnim }]}>
+        <Animated.View style={[styles.item, { opacity: fadeAnim, transform: [{ scaleY: scaleAnim }] }]}>
             <TouchableOpacity onPress={onToggleCheck} style={styles.checkbox}>
                 <Text>{isChecked ? '✅' : '⬜'}</Text>
             </TouchableOpacity>
@@ -33,7 +40,7 @@ const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleChec
                 <Text style={styles.itemText}>{text}</Text>
                 <Text style={styles.itemTime}>{timeString}</Text>
             </View>
-            <Text style={styles.emoji}>🎉</Text>
+            {isChecked && <Text style={styles.emoji}>🎉</Text>}
         </Animated.View>
     );
 };
@@ -47,6 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 20,
+        height: 60, // Assuming initial height is 60
     },
     textWrapper: {
         flex: 1,

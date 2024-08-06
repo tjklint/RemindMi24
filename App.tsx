@@ -9,6 +9,7 @@ interface ReminderItem {
     text: string;
     time: Date;
     isChecked: boolean;
+    id: number;
 }
 
 export default function App() {
@@ -40,7 +41,7 @@ export default function App() {
 
     const addReminder = () => {
         Keyboard.dismiss();
-        const newReminder: ReminderItem = { text: reminderText, time: reminderTime, isChecked: false };
+        const newReminder: ReminderItem = { text: reminderText, time: reminderTime, isChecked: false, id: Date.now() };
         setReminderList([...reminderList, newReminder]);
         scheduleNotification(reminderText, reminderTime);
         setReminderText('');
@@ -54,10 +55,14 @@ export default function App() {
         }
     };
 
-    const toggleCheck = (index: number) => {
-        const updatedReminders = [...reminderList];
-        updatedReminders[index].isChecked = !updatedReminders[index].isChecked;
-        setReminderList(updatedReminders);
+    const toggleCheck = (id: number) => {
+        setReminderList(prevList => prevList.map(reminder => 
+            reminder.id === id ? { ...reminder, isChecked: !reminder.isChecked } : reminder
+        ));
+    };
+
+    const removeReminder = (id: number) => {
+        setReminderList(prevList => prevList.filter(reminder => reminder.id !== id));
     };
 
     return (
@@ -67,14 +72,15 @@ export default function App() {
             <View style={styles.remindersWrapper}>
                 <ScrollView style={styles.items}>
                     {
-                        reminderList.map((item, index) => {
+                        reminderList.map((item) => {
                             return (
                                 <Reminder 
                                     text={item.text} 
                                     time={item.time.toISOString()} 
                                     isChecked={item.isChecked} 
-                                    key={index} 
-                                    onToggleCheck={() => toggleCheck(index)} 
+                                    key={item.id} 
+                                    onToggleCheck={() => toggleCheck(item.id)} 
+                                    onRemove={() => removeReminder(item.id)}
                                 />
                             );
                         })
