@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
+        paddingHorizontal: 20, // Added padding to prevent touching the edges
     },
     input: {
         flex: 1,
