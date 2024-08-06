@@ -136,12 +136,8 @@ export default function App() {
                     <Text style={styles.modalText}>
                         Developed with <Text style={{ color: 'green' }}>❤️</Text> by Timothy (TJ) Klint
                     </Text>
-                    <Text style={styles.modalText}>
-                        Connect with him on <Text style={styles.link} onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>LinkedIn</Text>
-                    </Text>
-                    <Text style={styles.modalText}>
-                        Star his repo, and view the source code: <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/tjklint/RemindMii')}>here</Text>
-                    </Text>
+                    <Text style={styles.bulletPoint}>• Connect with him on <Text style={styles.link} onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>LinkedIn</Text></Text>
+                    <Text style={styles.bulletPoint}>• Star his repo, and view the source code: <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/tjklint/RemindMii')}>here</Text></Text>
                     <TouchableOpacity
                         style={[styles.button, styles.buttonClose]}
                         onPress={() => setModalVisible(!modalVisible)}
@@ -160,13 +156,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#a3b18a',
-        paddingTop: 50,
+        paddingTop: '20%', // Increased padding to bring down the header
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
+        marginBottom: 20, // Added marginBottom to create space below the header
     },
     infoIcon: {
         marginLeft: 10,
@@ -256,6 +253,11 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
+    },
+    bulletPoint: {
+        marginBottom: 10,
+        textAlign: 'left',
+        width: '100%',
     },
     link: {
         color: '#2196F3',
