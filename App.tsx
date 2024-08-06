@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         bottom: 60,
         width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20, // Added padding to prevent touching the edges
     },
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         borderColor: '#588157',
         borderWidth: 2,
-        marginRight: 10,
     },
     timeButton: {
         backgroundColor: '#FFF',
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
+        marginLeft: 10, // Added margin to create space between elements
     },
     addButton: {
         width: 60,
@@ -182,5 +182,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#588157',
         borderWidth: 2,
+        marginLeft: 10,
     },
 });
