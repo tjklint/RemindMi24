@@ -158,18 +158,19 @@ export default function App() {
     );
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#a3b18a',
-        paddingTop: '20%', // Increased padding to bring down the header
+        paddingTop: '20%',
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginBottom: 20, // Added marginBottom to create space below the header
+        marginBottom: 20, 
     },
     infoIcon: {
         marginLeft: 10,
