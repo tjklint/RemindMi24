@@ -10,41 +10,31 @@ interface ReminderProps {
 
 const Reminder: React.FC<ReminderProps> = ({ text, time, isChecked, onToggleCheck }) => {
     const timeString = new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const fadeAnim = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
         if (isChecked) {
-            Animated.sequence([
-                Animated.timing(fadeAnim, {
-                    toValue: 1,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(fadeAnim, {
-                    toValue: 0,
-                    duration: 1000,
-                    delay: 500,
-                    useNativeDriver: true,
-                }),
-            ]).start();
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            fadeAnim.setValue(1);
         }
     }, [isChecked]);
 
     return (
-        <View style={styles.item}>
-            <TouchableOpacity onPress={onToggleCheck} style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
+        <Animated.View style={[styles.item, { opacity: fadeAnim }]}>
+            <TouchableOpacity onPress={onToggleCheck} style={styles.checkbox}>
                 <Text>{isChecked ? '✅' : '⬜'}</Text>
             </TouchableOpacity>
             <View style={styles.textWrapper}>
                 <Text style={styles.itemText}>{text}</Text>
                 <Text style={styles.itemTime}>{timeString}</Text>
             </View>
-            {isChecked && (
-                <Animated.Text style={[styles.emoji, { opacity: fadeAnim }]}>
-                    🎉
-                </Animated.Text>
-            )}
-        </View>
+            <Text style={styles.emoji}>🎉</Text>
+        </Animated.View>
     );
 };
 
@@ -76,9 +66,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    checkboxChecked: {
-        backgroundColor: '#a3b18a',
     },
     emoji: {
         fontSize: 24,
