@@ -1,22 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Platform } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import * as Notifications from 'expo-notifications';
 import Reminder from './components/Reminder/Reminder';
 
 interface ReminderItem {
     text: string;
-    time: string;
+    time: Date;
 }
 
 export default function App() {
     const [reminderText, setReminderText] = useState<string>('');
-    const [reminderTime, setReminderTime] = useState<string>('');
+    const [reminderTime, setReminderTime] = useState<Date>(new Date());
     const [reminderList, setReminderList] = useState<ReminderItem[]>([]);
+    const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
+
+    useEffect(() => {
+        Notifications.requestPermissionsAsync();
+    }, []);
+
+    const scheduleNotification = async (text: string, time: Date) => {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "Reminder",
+                body: text,
+            },
+            trigger: time,
+        });
+    };
 
     const addReminder = () => {
         Keyboard.dismiss();
-        setReminderList([...reminderList, { text: reminderText, time: reminderTime }]);
+        const newReminder: ReminderItem = { text: reminderText, time: reminderTime };
+        setReminderList([...reminderList, newReminder]);
+        scheduleNotification(reminderText, reminderTime);
         setReminderText('');
-        setReminderTime('');
+        setReminderTime(new Date());
+    };
+
+    const handleTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
+        setShowTimePicker(false);
+        if (selectedTime) {
+            setReminderTime(selectedTime);
+        }
     };
 
     return (
@@ -28,7 +54,7 @@ export default function App() {
                     {
                         reminderList.map((item, index) => {
                             return (
-                                <Reminder text={item.text} time={item.time} key={index} />
+                                <Reminder text={item.text} time={item.time.toISOString()} key={index} />
                             );
                         })
                     }
@@ -45,12 +71,20 @@ export default function App() {
                     value={reminderText} 
                     onChangeText={text => setReminderText(text)} 
                 />
-                <TextInput 
-                    style={styles.input} 
-                    placeholder={'Set time (e.g., 14:00)'} 
-                    value={reminderTime} 
-                    onChangeText={time => setReminderTime(time)} 
-                />
+                <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                    <View style={styles.timeButton}>
+                        <Text>Select Time</Text>
+                    </View>
+                </TouchableOpacity>
+                {showTimePicker && (
+                    <DateTimePicker
+                        value={reminderTime}
+                        mode="time"
+                        is24Hour={true}
+                        display="default"
+                        onChange={handleTimeChange}
+                    />
+                )}
                 <TouchableOpacity onPress={addReminder}>
                     <View style={styles.addButton}>
                         <Text>+</Text>
@@ -99,6 +133,15 @@ const styles = StyleSheet.create({
         borderColor: '#588157',
         borderWidth: 2,
         marginRight: 10,
+    },
+    timeButton: {
+        backgroundColor: '#FFF',
+        padding: 15,
+        borderRadius: 60,
+        borderColor: '#588157',
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     addButton: {
         width: 60,
