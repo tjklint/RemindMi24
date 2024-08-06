@@ -7,11 +7,12 @@ interface ReminderProps {
 }
 
 const Reminder: React.FC<ReminderProps> = ({ text, time }) => {
+    const timeString = new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     return (
         <View style={styles.item}>
             <View>
                 <Text style={styles.itemText}>{text}</Text>
-                <Text style={styles.itemTime}>{time}</Text>
+                <Text style={styles.itemTime}>{timeString}</Text>
             </View>
         </View>
     );
