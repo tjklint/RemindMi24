@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Platform } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Modal, Linking } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import * as Notifications from 'expo-notifications';
 import Toast from 'react-native-toast-message';
 import Reminder from './components/Reminder/Reminder';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface ReminderItem {
     text: string;
@@ -17,6 +18,7 @@ export default function App() {
     const [reminderTime, setReminderTime] = useState<Date>(new Date());
     const [reminderList, setReminderList] = useState<ReminderItem[]>([]);
     const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     useEffect(() => {
         Notifications.requestPermissionsAsync();
@@ -67,6 +69,9 @@ export default function App() {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.infoIcon} onPress={() => setModalVisible(true)}>
+                <Icon name="info-circle" size={30} color="#FFF" />
+            </TouchableOpacity>
             <Text style={styles.sectionTitle}>Today's Reminders ⏰</Text>
         
             <View style={styles.remindersWrapper}>
@@ -119,6 +124,31 @@ export default function App() {
                 </TouchableOpacity>
             </KeyboardAvoidingView>
 
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}
+            >
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>
+                        Developed with <Text style={{ color: 'green' }}>❤️</Text> by Timothy (TJ) Klint
+                    </Text>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://www.linkedin.com/in/timothy-klint/')}>
+                        <Text style={styles.link}>LinkedIn</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://github.com/tjklint/RemindMii')}>
+                        <Text style={styles.link}>GitHub</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}
+                    >
+                        <Text style={styles.textStyle}>Close</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+
             <Toast />
         </View>
     );
@@ -128,6 +158,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#a3b18a',
+        paddingTop: 50,
+    },
+    infoIcon: {
+        position: 'absolute',
+        top: 40,
+        right: 20,
+        zIndex: 1,
     },
     remindersWrapper: {
         height: '80%',
@@ -182,6 +219,42 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#588157',
         borderWidth: 2,
-        marginLeft: 10,
+        marginLeft: 10, // Added margin to create space between elements
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    link: {
+        color: '#2196F3',
+        marginBottom: 10,
     },
 });
