@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 20,
-        height: 60, // Assuming initial height is 60
+        height: 60, 
     },
     textWrapper: {
         flex: 1,
