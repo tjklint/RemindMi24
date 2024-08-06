@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Platform } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import * as Notifications from 'expo-notifications';
+import Toast from 'react-native-toast-message';
 import Reminder from './components/Reminder/Reminder';
 
 interface ReminderItem {
     text: string;
     time: Date;
+    isChecked: boolean;
 }
 
 export default function App() {
@@ -17,6 +19,13 @@ export default function App() {
 
     useEffect(() => {
         Notifications.requestPermissionsAsync();
+        Notifications.addNotificationReceivedListener(notification => {
+            Toast.show({
+                type: 'success',
+                text1: notification.request.content.title || undefined,
+                text2: notification.request.content.body || undefined
+            });
+        });
     }, []);
 
     const scheduleNotification = async (text: string, time: Date) => {
@@ -31,7 +40,7 @@ export default function App() {
 
     const addReminder = () => {
         Keyboard.dismiss();
-        const newReminder: ReminderItem = { text: reminderText, time: reminderTime };
+        const newReminder: ReminderItem = { text: reminderText, time: reminderTime, isChecked: false };
         setReminderList([...reminderList, newReminder]);
         scheduleNotification(reminderText, reminderTime);
         setReminderText('');
@@ -45,6 +54,12 @@ export default function App() {
         }
     };
 
+    const toggleCheck = (index: number) => {
+        const updatedReminders = [...reminderList];
+        updatedReminders[index].isChecked = !updatedReminders[index].isChecked;
+        setReminderList(updatedReminders);
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.sectionTitle}>Today's Reminders ⏰</Text>
@@ -54,7 +69,13 @@ export default function App() {
                     {
                         reminderList.map((item, index) => {
                             return (
-                                <Reminder text={item.text} time={item.time.toISOString()} key={index} />
+                                <Reminder 
+                                    text={item.text} 
+                                    time={item.time.toISOString()} 
+                                    isChecked={item.isChecked} 
+                                    key={index} 
+                                    onToggleCheck={() => toggleCheck(index)} 
+                                />
                             );
                         })
                     }
@@ -91,6 +112,8 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
+
+            <Toast />
         </View>
     );
 }
